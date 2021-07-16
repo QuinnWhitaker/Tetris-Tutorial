@@ -27,23 +27,27 @@ public class ScoreTracker : MonoBehaviour
 
     public void addToScore(int lines)
     {
+        int increase = 0;
         switch (lines)
         {
             default:
                 break;
             case 1:
-                score += (level + 1) * 40;
+                increase = (level + 1) * 40;
                 break;
             case 2:
-                score += (level + 1) * 100;
+                increase = (level + 1) * 100;
                 break;
             case 3:
-                score += (level + 1) * 300;
+                increase = (level + 1) * 300;
                 break;
             case 4:
-                score += (level + 1) * 1200;
+                increase = (level + 1) * 1200;
                 break;
         }
+
+        score += increase;
+        Debug.Log("increasing score by " + increase);
 
         UpdateScore();
     }

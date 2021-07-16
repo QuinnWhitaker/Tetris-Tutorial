@@ -9,7 +9,7 @@ public class TetrisBlock : MonoBehaviour
     public float fallTime = 0.8f;
     public static int height = 20;
     public static int width = 10;
-    private static Transform[,] grid = new Transform[width, height];
+    public static Transform[,] grid = new Transform[width, height+1];
 
     // Start is called before the first frame update
     void Start()
@@ -50,7 +50,7 @@ public class TetrisBlock : MonoBehaviour
     {
         //Debug.Log("Attempting move: " + xMove + ", " + yMove + ", " + zMove);
         transform.position += new Vector3(xMove, yMove, zMove);
-        if (!ValidMove())
+        if (!ValidMove(transform))
         {
             //Debug.Log("Undoing move as: " + -xMove + ", " + -yMove + ", " + -zMove);
             transform.position += new Vector3(-xMove, -yMove, -zMove);
@@ -62,7 +62,7 @@ public class TetrisBlock : MonoBehaviour
     {
         //Debug.Log("Attempting move: " + xMove + ", " + yMove + ", " + zMove);
         transform.position += new Vector3(xMove, yMove, zMove);
-        if (!ValidMove())
+        if (!ValidMove(transform))
         {
             //Debug.Log("Undoing move as: " + -xMove + ", " + -yMove + ", " + -zMove);
             transform.position += new Vector3(-xMove, -yMove, -zMove);
@@ -79,7 +79,7 @@ public class TetrisBlock : MonoBehaviour
     {
         //Debug.Log("Attempting rotation: " + degrees + " degrees, " + rotationPoint.x + ", " + rotationPoint.y + ", " + rotationPoint.z);
         transform.RotateAround(transform.TransformPoint(rotationPoint), new Vector3(0, 0, 1), degrees);
-        if (!ValidMove())
+        if (!ValidMove(transform))
         {
             //Debug.Log("Undoing rotation as: " + -degrees + " degrees, " + rotationPoint.x + ", " + rotationPoint.y + ", " + rotationPoint.z);
             transform.RotateAround(transform.TransformPoint(rotationPoint), new Vector3(0, 0, 1), -degrees);
@@ -98,6 +98,7 @@ public class TetrisBlock : MonoBehaviour
                 RowDown(i);
             }
         }
+        Debug.Log("Number of lines: " + numRows);
         FindObjectOfType<ScoreTracker>().addToScore(numRows);
     }
 
@@ -147,14 +148,15 @@ public class TetrisBlock : MonoBehaviour
             float roundedY = child.transform.position.y;
 
             grid[(int)roundedX, (int)roundedY] = child;
+            Debug.Log("X: " + (int)roundedX + " Y: " + (int)roundedY);
         }
     }
     // Sees if a move was valid by checking each of the child squares and ensuring they are in bounds
-    bool ValidMove()
+    public bool ValidMove(Transform thisTransform)
     {
         // Debug.Log("Confirming valid move...");
         // For each child object
-        foreach (Transform child in transform)
+        foreach (Transform child in thisTransform)
         {
             // Get its coordinates in rounded form
             float roundedX = child.transform.position.x;
@@ -163,7 +165,7 @@ public class TetrisBlock : MonoBehaviour
             //Debug.Log("Coordinates: " + roundedX + ", " + roundedY);
 
             // If any of the coordinates go out of bounds, return false
-            if (roundedX < 0 || roundedX >= width || roundedY < 0 || roundedY >= height)
+            if (roundedX < 0 || roundedX >= width || roundedY < 0 || roundedY >= height+1)
             {
                 //Debug.Log("Out of bounds");
                 return false;
@@ -177,6 +179,5 @@ public class TetrisBlock : MonoBehaviour
 
         return true;
     }
-
         
 }
