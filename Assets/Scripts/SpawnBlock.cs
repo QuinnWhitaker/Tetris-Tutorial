@@ -5,6 +5,7 @@ using UnityEngine;
 public class SpawnBlock : MonoBehaviour
 {
     public GameObject[] Blocks;
+    public Clock Clock;
     private bool lost = false;
 
     // Start is called before the first frame update
@@ -30,6 +31,7 @@ public class SpawnBlock : MonoBehaviour
                 Destroy(obj);
                 lost = true;
                 Debug.Log("LOSS");
+                Clock.Stop();
             }
         }
         
