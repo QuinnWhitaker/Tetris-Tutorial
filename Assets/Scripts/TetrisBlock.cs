@@ -9,7 +9,7 @@ public class TetrisBlock : MonoBehaviour
     public float fallTime = 0.8f;
     public static int height = 20;
     public static int width = 10;
-    public static Transform[,] grid = new Transform[width, height+1];
+    public static Transform[,] grid = new Transform[width, height];
 
     // Start is called before the first frame update
     void Start()
