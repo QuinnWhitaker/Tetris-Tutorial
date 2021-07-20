@@ -10,11 +10,15 @@ public class TetrisBlock : MonoBehaviour
     public static int height = 20;
     public static int width = 10;
     public static Transform[,] grid = new Transform[width, height];
+    public bool stopped = false;
+    public GameObject ghostRoot;
+    private GameObject ghost = null;
 
     // Start is called before the first frame update
     void Start()
     {
         //Debug.Log("Initializing TetrisBlock Script!");
+        UpdateGhost();
     }
 
     // Update is called once per frame
@@ -24,25 +28,65 @@ public class TetrisBlock : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.A))
         {
             AttemptMove(-1, 0, 0);
+            UpdateGhost();
         }
         else if (Input.GetKeyDown(KeyCode.D))
         {
             AttemptMove(1, 0, 0);
+            UpdateGhost();
         }
         else if (Input.GetKeyDown(KeyCode.Q))
         {
             AttemptRotate(90);
+            UpdateGhost();
         }
         else if (Input.GetKeyDown(KeyCode.E))
         {
             AttemptRotate(-90);
+            UpdateGhost();
+        }
+        else if (Input.GetKeyDown(KeyCode.Space))
+        {
+            transform.position = ghost.transform.position;
+            UpdateGhost();
         }
 
         if (Time.time - previousTime > (Input.GetKey(KeyCode.S) ? fallTime / 10 : fallTime))
         {
             AttemptFall(0, -1, 0);
             previousTime = Time.time;
+            UpdateGhost();
         }
+    }
+    void UpdateGhost()
+    {
+        Destroy(ghost);
+
+        if (!stopped)
+        {
+            ghost = Instantiate(ghostRoot, transform.position, transform.rotation);
+            while (ValidMove(ghost.transform))
+            {
+                ghost.transform.position += new Vector3(0, -1, 0);
+            }
+            ghost.transform.position += new Vector3(0, 1, 0);
+
+            foreach (Transform ghostChild in ghost.transform)
+            {
+                float roundedX = ghostChild.transform.position.x;
+                float roundedY = ghostChild.transform.position.y;
+
+                foreach (Transform mainChild in transform)
+                {
+                    if (roundedX == mainChild.transform.position.x &&
+                        roundedY == mainChild.transform.position.y)
+                    {
+                        Destroy(ghostChild.gameObject);
+                    }
+                }
+            }
+        }
+        
     }
 
     // Makes a move in the given direction, then checks to see if the move is valid. If not, it reverts the change.
@@ -67,9 +111,6 @@ public class TetrisBlock : MonoBehaviour
             //Debug.Log("Undoing move as: " + -xMove + ", " + -yMove + ", " + -zMove);
             transform.position += new Vector3(-xMove, -yMove, -zMove);
             AddToGrid();
-            CheckForLines();
-            this.enabled = false;
-            FindObjectOfType<SpawnBlock>().NewBlock();
         }
     }
 
@@ -98,7 +139,7 @@ public class TetrisBlock : MonoBehaviour
                 RowDown(i);
             }
         }
-        Debug.Log("Number of lines: " + numRows);
+        //Debug.Log("Number of lines: " + numRows);
         FindObjectOfType<ScoreTracker>().addToScore(numRows);
     }
 
@@ -148,8 +189,13 @@ public class TetrisBlock : MonoBehaviour
             float roundedY = child.transform.position.y;
 
             grid[(int)roundedX, (int)roundedY] = child;
-            Debug.Log("X: " + (int)roundedX + " Y: " + (int)roundedY);
+            //Debug.Log("X: " + (int)roundedX + " Y: " + (int)roundedY);
         }
+
+        CheckForLines();
+        this.enabled = false;
+        stopped = true;
+        FindObjectOfType<SpawnBlock>().NewBlock();
     }
     // Sees if a move was valid by checking each of the child squares and ensuring they are in bounds
     public bool ValidMove(Transform thisTransform)

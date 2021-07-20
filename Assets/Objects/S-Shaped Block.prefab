@@ -295,6 +295,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rotationPoint: {x: 0, y: -1, z: 0}
   fallTime: 0.8
+  ghostRoot: {fileID: 7882476325022292490, guid: e12e853afddf08448a5bf13831dcb1fc, type: 3}
 --- !u!1 &8854248725547026942
 GameObject:
   m_ObjectHideFlags: 0
