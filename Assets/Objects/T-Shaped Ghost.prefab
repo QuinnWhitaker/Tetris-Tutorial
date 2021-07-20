@@ -8,6 +8,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 580587790107272286, guid: cd7994e724a7d73488ce536e7b8a7b5e, type: 3}
+      propertyPath: m_Color.a
+      value: 0.39215687
+      objectReference: {fileID: 0}
+    - target: {fileID: 580587790107272286, guid: cd7994e724a7d73488ce536e7b8a7b5e, type: 3}
       propertyPath: m_Color.b
       value: 1
       objectReference: {fileID: 0}
@@ -64,6 +68,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2922417261458583430, guid: cd7994e724a7d73488ce536e7b8a7b5e, type: 3}
+      propertyPath: m_Color.a
+      value: 0.39215687
+      objectReference: {fileID: 0}
+    - target: {fileID: 2922417261458583430, guid: cd7994e724a7d73488ce536e7b8a7b5e, type: 3}
       propertyPath: m_Color.b
       value: 1
       objectReference: {fileID: 0}
@@ -76,6 +84,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3285525024567437706, guid: cd7994e724a7d73488ce536e7b8a7b5e, type: 3}
+      propertyPath: m_Color.a
+      value: 0.39215687
+      objectReference: {fileID: 0}
+    - target: {fileID: 3285525024567437706, guid: cd7994e724a7d73488ce536e7b8a7b5e, type: 3}
       propertyPath: m_Color.b
       value: 1
       objectReference: {fileID: 0}
@@ -86,6 +98,10 @@ PrefabInstance:
     - target: {fileID: 3285525024567437706, guid: cd7994e724a7d73488ce536e7b8a7b5e, type: 3}
       propertyPath: m_Color.r
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5604240532646941053, guid: cd7994e724a7d73488ce536e7b8a7b5e, type: 3}
+      propertyPath: m_Color.a
+      value: 0.39215687
       objectReference: {fileID: 0}
     - target: {fileID: 5604240532646941053, guid: cd7994e724a7d73488ce536e7b8a7b5e, type: 3}
       propertyPath: m_Color.b
@@ -101,7 +117,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9076268638190195882, guid: cd7994e724a7d73488ce536e7b8a7b5e, type: 3}
       propertyPath: m_Name
-      value: T-Shaped Block
+      value: T-Shaped Ghost
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 6413952026102472172, guid: cd7994e724a7d73488ce536e7b8a7b5e, type: 3}

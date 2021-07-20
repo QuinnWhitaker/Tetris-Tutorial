@@ -12,6 +12,7 @@ public class TetrisBlock : MonoBehaviour
     public static Transform[,] grid = new Transform[width, height];
     public bool stopped = false;
     public GameObject ghostRoot;
+    public Sprite[] squareSprites;
     private GameObject ghost = null;
 
     // Start is called before the first frame update
@@ -19,6 +20,7 @@ public class TetrisBlock : MonoBehaviour
     {
         //Debug.Log("Initializing TetrisBlock Script!");
         UpdateGhost();
+        GenerateSprites();
     }
 
     // Update is called once per frame
@@ -87,6 +89,15 @@ public class TetrisBlock : MonoBehaviour
             }
         }
         
+    }
+
+    void GenerateSprites()
+    {
+        bool white = true;
+        foreach (Transform child in transform)
+        {
+            child.GetComponent<SpriteRenderer>().sprite = squareSprites[Random.Range(0, squareSprites.Length)];
+        }
     }
 
     // Makes a move in the given direction, then checks to see if the move is valid. If not, it reverts the change.

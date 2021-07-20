@@ -8,6 +8,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 1135595571838080932, guid: abdb2488cd73fae478b4c7d8cbbfed47, type: 3}
+      propertyPath: m_Color.a
+      value: 0.39215687
+      objectReference: {fileID: 0}
+    - target: {fileID: 1135595571838080932, guid: abdb2488cd73fae478b4c7d8cbbfed47, type: 3}
       propertyPath: m_Color.b
       value: 1
       objectReference: {fileID: 0}
@@ -21,7 +25,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3986888398269381277, guid: abdb2488cd73fae478b4c7d8cbbfed47, type: 3}
       propertyPath: m_Name
-      value: S-Shaped Block
+      value: S-Shaped Ghost
+      objectReference: {fileID: 0}
+    - target: {fileID: 4683305454762729462, guid: abdb2488cd73fae478b4c7d8cbbfed47, type: 3}
+      propertyPath: m_Color.a
+      value: 0.39215687
       objectReference: {fileID: 0}
     - target: {fileID: 4683305454762729462, guid: abdb2488cd73fae478b4c7d8cbbfed47, type: 3}
       propertyPath: m_Color.b
@@ -34,6 +42,10 @@ PrefabInstance:
     - target: {fileID: 4683305454762729462, guid: abdb2488cd73fae478b4c7d8cbbfed47, type: 3}
       propertyPath: m_Color.r
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7299877374961994469, guid: abdb2488cd73fae478b4c7d8cbbfed47, type: 3}
+      propertyPath: m_Color.a
+      value: 0.39215687
       objectReference: {fileID: 0}
     - target: {fileID: 7299877374961994469, guid: abdb2488cd73fae478b4c7d8cbbfed47, type: 3}
       propertyPath: m_Color.b
@@ -90,6 +102,10 @@ PrefabInstance:
     - target: {fileID: 7449500448233194050, guid: abdb2488cd73fae478b4c7d8cbbfed47, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9149320976540923870, guid: abdb2488cd73fae478b4c7d8cbbfed47, type: 3}
+      propertyPath: m_Color.a
+      value: 0.39215687
       objectReference: {fileID: 0}
     - target: {fileID: 9149320976540923870, guid: abdb2488cd73fae478b4c7d8cbbfed47, type: 3}
       propertyPath: m_Color.b
