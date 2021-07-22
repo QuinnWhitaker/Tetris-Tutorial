@@ -8,30 +8,41 @@ public class Clock : MonoBehaviour
 {
     private Text textClock;
     public static Stopwatch timer = new Stopwatch();
+    private bool running = false;
     // Start is called before the first frame update
     void Start()
     {
-        
+        textClock = GetComponent<Text>();
+        SetVisible(false);
     }
     private void Awake()
     {
-        textClock = GetComponent<Text>();
-        timer.Start();
+        
     }
 
     // Update is called once per frame
     void Update()
     {
-        textClock.text = timer.Elapsed.ToString();
+        if (running)
+        {
+            textClock.text = (timer.Elapsed.ToString().Remove(11));
+        }
     }
 
-    public static void Stop()
+    public void StopRunning()
     {
+        running = false;
         timer.Stop();
     }
 
-    string LeadingZero(int n)
+    public void StartRunning()
     {
-        return n.ToString().PadLeft(2, '0');
+        running = true;
+        timer.Start();
+    }
+
+    public void SetVisible(bool show)
+    {
+        textClock.gameObject.GetComponent<Renderer>().enabled = show;
     }
 }

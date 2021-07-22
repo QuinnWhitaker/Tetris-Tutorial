@@ -11,6 +11,7 @@ public class TetrisBlock : MonoBehaviour
     public static int width = 10;
     public static Transform[,] grid = new Transform[width, height];
     public bool stopped = false;
+    private bool gameRunning = false;
     public GameObject ghostRoot;
     public Sprite[] squareSprites;
     private GameObject ghost = null;
@@ -18,46 +19,54 @@ public class TetrisBlock : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //Debug.Log("Initializing TetrisBlock Script!");
+
+    }
+
+    void StartGame()
+    {
+        gameRunning = true;
         UpdateGhost();
-        GenerateSprites();
+        //GenerateSprites();
     }
 
     // Update is called once per frame
     [System.Obsolete]
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.A))
+        if (gameRunning && !stopped)
         {
-            AttemptMove(-1, 0, 0);
-            UpdateGhost();
-        }
-        else if (Input.GetKeyDown(KeyCode.D))
-        {
-            AttemptMove(1, 0, 0);
-            UpdateGhost();
-        }
-        else if (Input.GetKeyDown(KeyCode.Q))
-        {
-            AttemptRotate(90);
-            UpdateGhost();
-        }
-        else if (Input.GetKeyDown(KeyCode.E))
-        {
-            AttemptRotate(-90);
-            UpdateGhost();
-        }
-        else if (Input.GetKeyDown(KeyCode.Space))
-        {
-            transform.position = ghost.transform.position;
-            UpdateGhost();
-        }
+            if (Input.GetKeyDown(KeyCode.A))
+            {
+                AttemptMove(-1, 0, 0);
+                UpdateGhost();
+            }
+            else if (Input.GetKeyDown(KeyCode.D))
+            {
+                AttemptMove(1, 0, 0);
+                UpdateGhost();
+            }
+            else if (Input.GetKeyDown(KeyCode.Q))
+            {
+                AttemptRotate(90);
+                UpdateGhost();
+            }
+            else if (Input.GetKeyDown(KeyCode.E))
+            {
+                AttemptRotate(-90);
+                UpdateGhost();
+            }
+            else if (Input.GetKeyDown(KeyCode.Space))
+            {
+                transform.position = ghost.transform.position;
+                UpdateGhost();
+            }
 
-        if (Time.time - previousTime > (Input.GetKey(KeyCode.S) ? fallTime / 10 : fallTime))
-        {
-            AttemptFall(0, -1, 0);
-            previousTime = Time.time;
-            UpdateGhost();
+            if (Time.time - previousTime > (Input.GetKey(KeyCode.S) ? fallTime / 10 : fallTime))
+            {
+                AttemptFall(0, -1, 0);
+                previousTime = Time.time;
+                UpdateGhost();
+            }
         }
     }
     void UpdateGhost()
@@ -93,7 +102,6 @@ public class TetrisBlock : MonoBehaviour
 
     void GenerateSprites()
     {
-        bool white = true;
         foreach (Transform child in transform)
         {
             child.GetComponent<SpriteRenderer>().sprite = squareSprites[Random.Range(0, squareSprites.Length)];
@@ -236,5 +244,13 @@ public class TetrisBlock : MonoBehaviour
 
         return true;
     }
-        
+
+    public void SetStopped(bool stop)
+    {
+        stopped = stop;
+    }
+    public void SetPaused(bool paused)
+    {
+        gameRunning = !paused;
+    }
 }

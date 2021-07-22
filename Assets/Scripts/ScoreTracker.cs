@@ -7,11 +7,12 @@ public class ScoreTracker : MonoBehaviour
 {
     private static int score = 0;
     private static int level = 0;
+    private UnityEngine.UI.Text scoreText;
 
     // Start is called before the first frame update
     void Start()
     {
-
+        scoreText = gameObject.GetComponent<UnityEngine.UI.Text>();
     }
 
     // Update is called once per frame
@@ -22,7 +23,7 @@ public class ScoreTracker : MonoBehaviour
 
     private void UpdateScore()
     {
-        gameObject.GetComponent<UnityEngine.UI.Text>().text = "SCORE: " + score;
+        scoreText.text = "" + score;
     }
 
     public void addToScore(int lines)
@@ -47,7 +48,7 @@ public class ScoreTracker : MonoBehaviour
         }
 
         score += increase;
-        Debug.Log("increasing score by " + increase);
+        //Debug.Log("increasing score by " + increase);
 
         UpdateScore();
     }
