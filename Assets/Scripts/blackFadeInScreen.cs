@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CanvasStartScreen : MonoBehaviour
+public class BlackFadeInScreen : MonoBehaviour
 {
     private FadeCanvasObject fade;
     // Start is called before the first frame update
@@ -11,12 +11,11 @@ public class CanvasStartScreen : MonoBehaviour
         CanvasGroup cg = this.GetComponent<CanvasGroup>();
         cg.alpha = 0;
         fade = this.GetComponent<FadeCanvasObject>();
-        
     }
 
     // Update is called once per frame
     void Update()
     {
-
+        
     }
 }
