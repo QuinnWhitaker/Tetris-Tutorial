@@ -18,7 +18,7 @@ public class ScoreTracker : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     private void UpdateScore()

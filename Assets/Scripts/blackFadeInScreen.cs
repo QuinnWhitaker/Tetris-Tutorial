@@ -9,13 +9,21 @@ public class BlackFadeInScreen : MonoBehaviour
     void Start()
     {
         CanvasGroup cg = this.GetComponent<CanvasGroup>();
-        cg.alpha = 0;
+        cg.alpha = 1;
         fade = this.GetComponent<FadeCanvasObject>();
+        StartCoroutine("StartFadeIn");
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
+    }
+
+    IEnumerator StartFadeIn()
+    {
+        yield return new WaitForSeconds(2);
+        yield return StartCoroutine(fade.FadeOut());
+        this.gameObject.SetActive(false);
     }
 }

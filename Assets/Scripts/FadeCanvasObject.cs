@@ -15,6 +15,7 @@ public class FadeCanvasObject : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        /*
         if (fadeOut)
         {
             float alpha = this.GetComponent<CanvasGroup>().alpha;
@@ -38,15 +39,36 @@ public class FadeCanvasObject : MonoBehaviour
                 fadeIn = false;
             }
         }
+        */
     }
 
     public void FadeOutObject()
     {
-        fadeOut = true;
+        //fadeOut = true;
+        StartCoroutine("FadeOut");
     }
 
     public void FadeInObject()
     {
-        fadeIn = true;
+        //fadeIn = true;
+        StartCoroutine("FadeIn");
+    }
+
+    public IEnumerator FadeOut()
+    {
+        for (float ft = 1f; ft >= 0; ft -= fadeSpeed)
+        {
+            this.GetComponent<CanvasGroup>().alpha = ft;
+            yield return null;
+        }
+    }
+
+    public IEnumerator FadeIn()
+    {
+        for (float ft = 0f; ft <= 1; ft += fadeSpeed)
+        {
+            this.GetComponent<CanvasGroup>().alpha = ft;
+            yield return null;
+        }
     }
 }

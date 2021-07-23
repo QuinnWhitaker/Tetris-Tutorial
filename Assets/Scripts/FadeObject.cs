@@ -15,42 +15,40 @@ public class FadeObject : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(fadeOut)
-        {
-            Color objectColor = this.GetComponent<Renderer>().material.color;
-            float fadeAmount = objectColor.a - (fadeSpeed * Time.deltaTime);
 
-            objectColor = new Color(objectColor.r, objectColor.g, objectColor.b, fadeAmount);
-            this.GetComponent<Renderer>().material.color = objectColor;
-
-            if (objectColor.a <= 0)
-            {
-                fadeOut = false;
-            }
-        }
-
-        if (fadeIn)
-        {
-            Color objectColor = this.GetComponent<Renderer>().material.color;
-            float fadeAmount = objectColor.a + (fadeSpeed * Time.deltaTime);
-
-            objectColor = new Color(objectColor.r, objectColor.g, objectColor.b, fadeAmount);
-            this.GetComponent<Renderer>().material.color = objectColor;
-
-            if (objectColor.a >= 1)
-            {
-                fadeIn = false;
-            }
-        }
     }
 
     public void FadeOutObject()
     {
-        fadeOut = true;
+        //fadeOut = true;
+        StartCoroutine("FadeOut");
     }
 
     public void FadeInObject()
     {
-        fadeIn = true;
+        //fadeIn = true;
+        StartCoroutine("FadeIn");
+    }
+
+    public IEnumerator FadeOut()
+    {
+        for (float ft = 1f; ft >=0; ft -= fadeSpeed)
+        {
+            Color c = this.GetComponent<Renderer>().material.color;
+            c.a = ft;
+            this.GetComponent<Renderer>().material.color = c;
+            yield return null;
+        }
+    }
+
+    public IEnumerator FadeIn()
+    {
+        for (float ft = 0f; ft <= 1; ft += fadeSpeed)
+        {
+            Color c = this.GetComponent<Renderer>().material.color;
+            c.a = ft;
+            this.GetComponent<Renderer>().material.color = c;
+            yield return null;
+        }
     }
 }

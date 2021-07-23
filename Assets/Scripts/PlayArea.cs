@@ -5,12 +5,15 @@ using UnityEngine;
 public class PlayArea : MonoBehaviour
 {
 
-    public GameObject canvasPlayArea;
+    public FadeObject fade;
 
     // Start is called before the first frame update
     void Start()
     {
-        SetVisible(false);
+        Color c = this.GetComponent<Renderer>().material.color;
+        c.a = 0;
+        this.GetComponent<Renderer>().material.color = c;
+        fade = this.GetComponent<FadeObject>();
     }
 
     // Update is called once per frame
@@ -18,9 +21,8 @@ public class PlayArea : MonoBehaviour
     {
         
     }
-    public void SetVisible(bool show)
+    public IEnumerator fadeIn()
     {
-        GetComponent<Renderer>().enabled = show;
-        canvasPlayArea.SetActive(show);
+        yield return StartCoroutine(fade.FadeIn());
     }
 }

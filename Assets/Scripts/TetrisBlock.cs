@@ -11,7 +11,7 @@ public class TetrisBlock : MonoBehaviour
     public static int width = 10;
     public static Transform[,] grid = new Transform[width, height];
     public bool stopped = false;
-    private bool gameRunning = false;
+    public static GameRunner gameRunner;
     public GameObject ghostRoot;
     public Sprite[] squareSprites;
     private GameObject ghost = null;
@@ -19,13 +19,7 @@ public class TetrisBlock : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
-    }
-
-    void StartGame()
-    {
-        gameRunning = true;
-        UpdateGhost();
+        gameRunner = FindObjectOfType<GameRunner>();
         //GenerateSprites();
     }
 
@@ -33,7 +27,7 @@ public class TetrisBlock : MonoBehaviour
     [System.Obsolete]
     void Update()
     {
-        if (gameRunning && !stopped)
+        if (gameRunner.getStatus() == GameRunner.gameState.Started && !stopped)
         {
             if (Input.GetKeyDown(KeyCode.A))
             {
@@ -248,9 +242,5 @@ public class TetrisBlock : MonoBehaviour
     public void SetStopped(bool stop)
     {
         stopped = stop;
-    }
-    public void SetPaused(bool paused)
-    {
-        gameRunning = !paused;
     }
 }
