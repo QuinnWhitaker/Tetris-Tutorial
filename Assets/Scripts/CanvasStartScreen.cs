@@ -5,7 +5,9 @@ using UnityEngine.UI;
 
 public class CanvasStartScreen : MonoBehaviour
 {
-    private FadeCanvasObject fade;
+    private FadeObject fade;
+    private bool finished = false;
+    private bool skip = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -14,14 +16,28 @@ public class CanvasStartScreen : MonoBehaviour
             CanvasGroup childCG = child.GetComponent<CanvasGroup>();
             childCG.alpha = 0;
         }
-        fade = this.GetComponent<FadeCanvasObject>();
+        fade = this.GetComponent<FadeObject>();
         fadeIn();
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (Input.anyKey)
+        {
+            skip = true;
+            fade.skipFade();
+        }
+    }
 
+    IEnumerator FinishInSeconds(float seconds)
+    {
+        finished = false;
+        if (!skip)
+        {
+            yield return new WaitForSeconds(seconds);
+            finished = true;
+        }
     }
 
     public void fadeIn()
@@ -36,20 +52,23 @@ public class CanvasStartScreen : MonoBehaviour
 
     IEnumerator StartFadeIn()
     {
-        yield return new WaitForSeconds(7);
+        StartCoroutine(FinishInSeconds(7));
+        yield return new WaitUntil(() => finished || skip);
 
         foreach (Transform child in transform)
         {
-            FadeCanvasObject childFade = child.GetComponent<FadeCanvasObject>();
+            FadeObject childFade = child.GetComponent<FadeObject>();
             childFade.fadeSpeed = 0.01f;
             childFade.FadeInObject();
             if (child.name.Equals("Logo"))
             {
-                yield return new WaitForSeconds(1.5f);
+                StartCoroutine(FinishInSeconds(1.5f));
+                yield return new WaitUntil(() => finished || skip);
             }
             else
             {
-                yield return new WaitForSeconds(0.8f);
+                StartCoroutine(FinishInSeconds(0.8f));
+                yield return new WaitUntil(() => finished || skip);
             }
 
         }

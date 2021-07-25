@@ -4,18 +4,27 @@ using UnityEngine;
 
 public class FadeObject : MonoBehaviour
 {
-    private bool fadeOut, fadeIn;
-    public float fadeSpeed;
+    public float fadeSpeed = 0.10f;
+    private bool skip = false;
+    private bool canvasObject = false;
     // Start is called before the first frame update
     void Start()
     {
-        
+        if (this.GetComponent<CanvasGroup>() != null)
+        {
+            canvasObject = true;
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
 
+    }
+
+    public void skipFade()
+    {
+        skip = true;
     }
 
     public void FadeOutObject()
@@ -30,25 +39,105 @@ public class FadeObject : MonoBehaviour
         StartCoroutine("FadeIn");
     }
 
+    private IEnumerator FadeOut_Canvas()
+    {
+        for (float ft = 1f; ft >= 0; ft -= fadeSpeed)
+        {
+            if (!skip)
+            {
+                this.GetComponent<CanvasGroup>().alpha = ft;
+                yield return null;
+            } else
+            {
+                this.GetComponent<CanvasGroup>().alpha = 0;
+                skip = false;
+                break;
+            }
+        }
+    }
+
+    private IEnumerator FadeIn_Canvas()
+    {
+        for (float ft = 0f; ft <= 1; ft += fadeSpeed)
+        {
+            if (!skip)
+            {
+                this.GetComponent<CanvasGroup>().alpha = ft;
+                yield return null;
+            }
+            else
+            {
+                this.GetComponent<CanvasGroup>().alpha = 1;
+                skip = false;
+                break;
+            }
+        }
+    }
+
+    private IEnumerator FadeOut_GameObject()
+    {
+        for (float ft = 1f; ft >= 0; ft -= fadeSpeed)
+        {
+            if (!skip)
+            {
+                Color c = this.GetComponent<Renderer>().material.color;
+                c.a = ft;
+                this.GetComponent<Renderer>().material.color = c;
+                yield return null;
+            }
+            else
+            {
+                Color c = this.GetComponent<Renderer>().material.color;
+                c.a = 0;
+                this.GetComponent<Renderer>().material.color = c;
+                skip = false;
+                break;
+            }
+        }
+    }
+
+    private IEnumerator FadeIn_GameObject()
+    {
+        for (float ft = 0f; ft <= 1; ft += fadeSpeed)
+        {
+            if (!skip)
+            {
+                Color c = this.GetComponent<Renderer>().material.color;
+                c.a = ft;
+                this.GetComponent<Renderer>().material.color = c;
+                yield return null;
+            }
+            else
+            {
+                Color c = this.GetComponent<Renderer>().material.color;
+                c.a = 1;
+                this.GetComponent<Renderer>().material.color = c;
+                skip = false;
+                break;
+            }
+        }
+    }
+
     public IEnumerator FadeOut()
     {
-        for (float ft = 1f; ft >=0; ft -= fadeSpeed)
+        if (canvasObject)
         {
-            Color c = this.GetComponent<Renderer>().material.color;
-            c.a = ft;
-            this.GetComponent<Renderer>().material.color = c;
-            yield return null;
+            yield return StartCoroutine("FadeOut_Canvas");
+        } else
+        {
+            yield return StartCoroutine("FadeOut_GameObject");
         }
     }
 
     public IEnumerator FadeIn()
     {
-        for (float ft = 0f; ft <= 1; ft += fadeSpeed)
+        if (canvasObject)
         {
-            Color c = this.GetComponent<Renderer>().material.color;
-            c.a = ft;
-            this.GetComponent<Renderer>().material.color = c;
-            yield return null;
+            yield return StartCoroutine("FadeIn_Canvas");
+        }
+        else
+        {
+            yield return StartCoroutine("FadeIn_GameObject");
         }
     }
 }

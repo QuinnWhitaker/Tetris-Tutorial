@@ -135,8 +135,8 @@ GameObject:
   - component: {fileID: 117414381}
   - component: {fileID: 117414380}
   - component: {fileID: 117414379}
-  - component: {fileID: 117414383}
   - component: {fileID: 117414382}
+  - component: {fileID: 117414383}
   m_Layer: 5
   m_Name: Stopwatch
   m_TagString: Untagged
@@ -239,10 +239,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 117414377}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a1c5a7c5a2628f8448b4afe38f9fae97, type: 3}
+  m_Script: {fileID: 11500000, guid: 3016a4a292cf1b54daeb3eebd1c2258e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fadeSpeed: 0.01
+  fadeSpeed: 0.1
 --- !u!1 &300244537
 GameObject:
   m_ObjectHideFlags: 0
@@ -374,10 +374,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 350382308}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a1c5a7c5a2628f8448b4afe38f9fae97, type: 3}
+  m_Script: {fileID: 11500000, guid: 3016a4a292cf1b54daeb3eebd1c2258e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fadeSpeed: 0
+  fadeSpeed: 0.1
 --- !u!225 &350382313
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -516,10 +516,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 398180190}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a1c5a7c5a2628f8448b4afe38f9fae97, type: 3}
+  m_Script: {fileID: 11500000, guid: 3016a4a292cf1b54daeb3eebd1c2258e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fadeSpeed: 0.005
+  fadeSpeed: 0.1
 --- !u!225 &398180197
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -627,9 +627,9 @@ GameObject:
   - component: {fileID: 588814688}
   - component: {fileID: 588814687}
   - component: {fileID: 588814686}
-  - component: {fileID: 588814690}
   - component: {fileID: 588814689}
   - component: {fileID: 588814691}
+  - component: {fileID: 588814690}
   m_Layer: 5
   m_Name: StartButton
   m_TagString: Untagged
@@ -760,10 +760,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 588814684}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a1c5a7c5a2628f8448b4afe38f9fae97, type: 3}
+  m_Script: {fileID: 11500000, guid: 3016a4a292cf1b54daeb3eebd1c2258e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fadeSpeed: 0
+  fadeSpeed: 0.1
 --- !u!114 &588814691
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -912,10 +912,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 734382359}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a1c5a7c5a2628f8448b4afe38f9fae97, type: 3}
+  m_Script: {fileID: 11500000, guid: 3016a4a292cf1b54daeb3eebd1c2258e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fadeSpeed: 0
+  fadeSpeed: 0.1
 --- !u!225 &734382365
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -1279,10 +1279,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1243188218}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a1c5a7c5a2628f8448b4afe38f9fae97, type: 3}
+  m_Script: {fileID: 11500000, guid: 3016a4a292cf1b54daeb3eebd1c2258e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fadeSpeed: 0.01
+  fadeSpeed: 0.1
 --- !u!225 &1243188224
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -1483,9 +1483,9 @@ GameObject:
   - component: {fileID: 1752751165}
   - component: {fileID: 1752751170}
   - component: {fileID: 1752751169}
-  - component: {fileID: 1752751168}
   - component: {fileID: 1752751167}
   - component: {fileID: 1752751166}
+  - component: {fileID: 1752751168}
   m_Layer: 5
   m_Name: Black Screen
   m_TagString: Untagged
@@ -1545,10 +1545,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1752751164}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a1c5a7c5a2628f8448b4afe38f9fae97, type: 3}
+  m_Script: {fileID: 11500000, guid: 3016a4a292cf1b54daeb3eebd1c2258e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fadeSpeed: 0.0055
+  fadeSpeed: 0.006
 --- !u!114 &1752751169
 MonoBehaviour:
   m_ObjectHideFlags: 0

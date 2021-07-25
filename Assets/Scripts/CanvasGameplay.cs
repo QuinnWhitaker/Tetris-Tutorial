@@ -24,7 +24,7 @@ public class CanvasGameplay : MonoBehaviour
     {
         foreach (Transform child in transform)
         {
-            FadeCanvasObject childFade = child.GetComponent<FadeCanvasObject>();
+            FadeObject childFade = child.GetComponent<FadeObject>();
             childFade.fadeSpeed = 0.01f;
             childFade.FadeInObject();
             yield return new WaitForSeconds(0.8f);

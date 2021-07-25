@@ -20,7 +20,7 @@ public class TetrisBlock : MonoBehaviour
     void Start()
     {
         gameRunner = FindObjectOfType<GameRunner>();
-        //GenerateSprites();
+        GenerateSprites();
     }
 
     // Update is called once per frame
