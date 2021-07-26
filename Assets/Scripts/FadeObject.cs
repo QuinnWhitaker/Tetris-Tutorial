@@ -10,16 +10,26 @@ public class FadeObject : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        if (this.GetComponent<CanvasGroup>() != null)
-        {
-            canvasObject = true;
-        }
+        checkType();
+    }
+
+    private void OnEnable()
+    {
+        checkType();
     }
 
     // Update is called once per frame
     void Update()
     {
 
+    }
+
+    void checkType()
+    {
+        if (this.GetComponent<CanvasGroup>() != null)
+        {
+            canvasObject = true;
+        }
     }
 
     public void skipFade()

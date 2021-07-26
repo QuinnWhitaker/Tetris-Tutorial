@@ -6,6 +6,8 @@ public class GameRunner : MonoBehaviour
 {
     public Clock Clock;
     public SpawnBlock spawner;
+    public GameObject pauseMenu_object;
+    private PauseMenu pauseMenu_script;
     public enum gameState
     {
         Started,
@@ -50,6 +52,9 @@ public class GameRunner : MonoBehaviour
                 Debug.Log("Pausing!");
                 Clock.enabled = false;
                 state = gameState.Paused;
+                pauseMenu_object.SetActive(true);
+                pauseMenu_script = pauseMenu_object.GetComponent<PauseMenu>();
+                pauseMenu_script.PauseGame();
             }
         } else if (state == gameState.Paused)
         {
@@ -58,6 +63,9 @@ public class GameRunner : MonoBehaviour
                 Debug.Log("Unpausing!");
                 Clock.enabled = true;
                 state = gameState.Started;
+                pauseMenu_script = pauseMenu_object.GetComponent<PauseMenu>();
+                pauseMenu_script.UnpauseGame();
+                pauseMenu_object.SetActive(false);
             }
         }
 
