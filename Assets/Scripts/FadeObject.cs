@@ -90,16 +90,16 @@ public class FadeObject : MonoBehaviour
         {
             if (!skip)
             {
-                Color c = this.GetComponent<Renderer>().material.color;
+                Color c = this.GetComponent<SpriteRenderer>().color;
                 c.a = ft;
-                this.GetComponent<Renderer>().material.color = c;
+                this.GetComponent<SpriteRenderer>().color = c;
                 yield return null;
             }
             else
             {
-                Color c = this.GetComponent<Renderer>().material.color;
+                Color c = this.GetComponent<SpriteRenderer>().color;
                 c.a = 0;
-                this.GetComponent<Renderer>().material.color = c;
+                this.GetComponent<SpriteRenderer>().color = c;
                 skip = false;
                 break;
             }
@@ -112,16 +112,16 @@ public class FadeObject : MonoBehaviour
         {
             if (!skip)
             {
-                Color c = this.GetComponent<Renderer>().material.color;
+                Color c = this.GetComponent<SpriteRenderer>().color;
                 c.a = ft;
-                this.GetComponent<Renderer>().material.color = c;
+                this.GetComponent<SpriteRenderer>().color = c;
                 yield return null;
             }
             else
             {
-                Color c = this.GetComponent<Renderer>().material.color;
+                Color c = this.GetComponent<SpriteRenderer>().color;
                 c.a = 1;
-                this.GetComponent<Renderer>().material.color = c;
+                this.GetComponent<SpriteRenderer>().color = c;
                 skip = false;
                 break;
             }

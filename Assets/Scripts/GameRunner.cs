@@ -8,6 +8,10 @@ public class GameRunner : MonoBehaviour
     public SpawnBlock spawner;
     public GameObject pauseMenu_object;
     private PauseMenu pauseMenu_script;
+    public PlayArea playArea;
+    public CanvasGameplay canvasGameplay;
+    public CanvasStartScreen canvasStartScreen_script;
+    public GameObject canvasStartScreen_object;
     public enum gameState
     {
         Started,
@@ -28,8 +32,13 @@ public class GameRunner : MonoBehaviour
         return state;
     }
 
-    public void StartGame()
+    public IEnumerator StartGame()
     {
+        canvasStartScreen_script.fadeOut();
+        yield return StartCoroutine(canvasStartScreen_script.fadeOut());
+        yield return StartCoroutine(playArea.fadeIn());
+        yield return StartCoroutine(canvasGameplay.fadeIn());
+        canvasStartScreen_object.SetActive(false);
         state = gameState.Started;
         spawner.StartGame();
         Clock.enabled = true;
@@ -40,6 +49,27 @@ public class GameRunner : MonoBehaviour
     {
         Debug.Log("LOSS");
         Clock.enabled = false;
+        state = gameState.Stopped;
+    }
+
+    public void PauseGame()
+    {
+        Debug.Log("Pausing!");
+        Clock.enabled = false;
+        state = gameState.Paused;
+        pauseMenu_object.SetActive(true);
+        pauseMenu_script = pauseMenu_object.GetComponent<PauseMenu>();
+        pauseMenu_script.PauseGame();
+    }
+
+    public void UnpauseGame()
+    {
+        Debug.Log("Unpausing!");
+        Clock.enabled = true;
+        state = gameState.Started;
+        pauseMenu_script = pauseMenu_object.GetComponent<PauseMenu>();
+        pauseMenu_script.UnpauseGame();
+        pauseMenu_object.SetActive(false);
     }
 
     // Update is called once per frame
@@ -49,23 +79,13 @@ public class GameRunner : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                Debug.Log("Pausing!");
-                Clock.enabled = false;
-                state = gameState.Paused;
-                pauseMenu_object.SetActive(true);
-                pauseMenu_script = pauseMenu_object.GetComponent<PauseMenu>();
-                pauseMenu_script.PauseGame();
+                PauseGame();
             }
         } else if (state == gameState.Paused)
         {
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                Debug.Log("Unpausing!");
-                Clock.enabled = true;
-                state = gameState.Started;
-                pauseMenu_script = pauseMenu_object.GetComponent<PauseMenu>();
-                pauseMenu_script.UnpauseGame();
-                pauseMenu_object.SetActive(false);
+                UnpauseGame();
             }
         }
 

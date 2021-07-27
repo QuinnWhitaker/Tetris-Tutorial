@@ -10,9 +10,9 @@ public class PlayArea : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Color c = this.GetComponent<Renderer>().material.color;
+        Color c = this.GetComponent<SpriteRenderer>().color;
         c.a = 0;
-        this.GetComponent<Renderer>().material.color = c;
+        this.GetComponent<SpriteRenderer>().color = c;
         fade = this.GetComponent<FadeObject>();
     }
 

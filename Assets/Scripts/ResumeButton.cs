@@ -3,23 +3,25 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class StartButton : MonoBehaviour
+public class ResumeButton : MonoBehaviour
 {
     public GameRunner gameRunner;
+
     // Start is called before the first frame update
     void Start()
     {
 
     }
 
-    public void ClickButton()
-    {
-        StartCoroutine(gameRunner.StartGame());
-    }
-
     // Update is called once per frame
     void Update()
     {
         
+    }
+
+    public void ClickButton()
+    {
+        Debug.Log("Pressing!");
+        gameRunner.UnpauseGame();
     }
 }
