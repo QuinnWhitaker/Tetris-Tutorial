@@ -7,9 +7,6 @@ public class TetrisBlock : MonoBehaviour
     public Vector3 rotationPoint;
     private float previousTime;
     public float fallTime = 0.8f;
-    public static int height = 20;
-    public static int width = 10;
-    public static Transform[,] grid = new Transform[width, height];
     public bool stopped = false;
     public static GameRunner gameRunner;
     public GameObject ghostRoot;
@@ -23,11 +20,16 @@ public class TetrisBlock : MonoBehaviour
         GenerateSprites();
     }
 
+    private void OnEnable()
+    {
+        gameRunner = FindObjectOfType<GameRunner>();
+    }
+
     // Update is called once per frame
     [System.Obsolete]
     void Update()
     {
-        if (gameRunner.getStatus() == GameRunner.gameState.Started && !stopped)
+        if (gameRunner.GetStatus() == GameRunner.gameState.Started && !stopped)
         {
             if (Input.GetKeyDown(KeyCode.A))
             {
@@ -143,7 +145,7 @@ public class TetrisBlock : MonoBehaviour
     void CheckForLines()
     {
         int numRows = 0;
-        for (int i = height-1; i >= 0; i--)
+        for (int i = gameRunner.GetHeight()-1; i >= 0; i--)
         {
             if (HasLine(i))
             {
@@ -153,14 +155,14 @@ public class TetrisBlock : MonoBehaviour
             }
         }
         //Debug.Log("Number of lines: " + numRows);
-        FindObjectOfType<ScoreTracker>().addToScore(numRows);
+        gameRunner.AddToScore(numRows);
     }
 
     bool HasLine(int i)
     {
-        for(int j = 0; j < width; j++)
+        for(int j = 0; j < gameRunner.GetWidth(); j++)
         {
-            if (grid[j, i] == null)
+            if (gameRunner.GetGrid(j, i) == null)
             {
                 return false;
             }
@@ -171,24 +173,23 @@ public class TetrisBlock : MonoBehaviour
 
     void DeleteLine(int i)
     {
-        for (int j = 0; j < width; j++)
+        for (int j = 0; j < gameRunner.GetWidth(); j++)
         {
-            Destroy(grid[j, i].gameObject);
-            grid[j, i] = null;
+            gameRunner.DestroyGrid(j, i);
         }
     }
 
     void RowDown(int i)
     {
-        for (int y = i; y < height; y++)
+        for (int y = i; y < gameRunner.GetHeight(); y++)
         {
-            for (int j = 0; j < width; j++)
+            for (int j = 0; j < gameRunner.GetWidth(); j++)
             {
-                if (grid[j,y] != null)
+                if (gameRunner.GetGrid(j, y) != null)
                 {
-                    grid[j, y - 1] = grid[j, y];
-                    grid[j, y] = null;
-                    grid[j, y - 1].transform.position -= new Vector3(0, 1, 0);
+                    gameRunner.SetGrid(j, y - 1, gameRunner.GetGrid(j, y));
+                    gameRunner.SetGrid(j, y, null);
+                    gameRunner.MoveGrid(j, y - 1, new Vector3(0, -1, 0));
                 }
             }
         }
@@ -201,7 +202,7 @@ public class TetrisBlock : MonoBehaviour
             float roundedX = child.transform.position.x;
             float roundedY = child.transform.position.y;
 
-            grid[(int)roundedX, (int)roundedY] = child;
+            gameRunner.SetGrid((int)roundedX, (int)roundedY, child);
             //Debug.Log("X: " + (int)roundedX + " Y: " + (int)roundedY);
         }
 
@@ -224,13 +225,13 @@ public class TetrisBlock : MonoBehaviour
             //Debug.Log("Coordinates: " + roundedX + ", " + roundedY);
 
             // If any of the coordinates go out of bounds, return false
-            if (roundedX < 0 || roundedX >= width || roundedY < 0 || roundedY >= height+1)
+            if (roundedX < 0 || roundedX >= gameRunner.GetWidth() || roundedY < 0 || roundedY >= gameRunner.GetHeight()+1)
             {
                 //Debug.Log("Out of bounds");
                 return false;
             }
 
-            if (grid[(int)roundedX, (int)roundedY] != null)
+            if (gameRunner.GetGrid((int)roundedX, (int)roundedY) != null)
             {
                 return false;
             }

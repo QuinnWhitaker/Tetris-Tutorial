@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ConcedeButton : MonoBehaviour
+public class RestartButton : MonoBehaviour
 {
     public GameRunner gameRunner;
     // Start is called before the first frame update
@@ -19,6 +19,6 @@ public class ConcedeButton : MonoBehaviour
 
     public void ClickButton()
     {
-        gameRunner.ConcedeGame();
+        gameRunner.RestartGame();
     }
 }

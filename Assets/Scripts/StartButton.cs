@@ -14,7 +14,7 @@ public class StartButton : MonoBehaviour
 
     public void ClickButton()
     {
-        StartCoroutine(gameRunner.StartGame());
+        StartCoroutine(gameRunner.StartGameFromMainMenu());
     }
 
     // Update is called once per frame

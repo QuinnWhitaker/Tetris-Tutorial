@@ -9,11 +9,21 @@ public class GameRunner : MonoBehaviour
     public GameObject pauseMenu_object;
     private PauseMenu pauseMenu_script;
     public PlayArea playArea;
-    public CanvasGameplay canvasGameplay;
+    public CanvasGameplay canvasGameplay_script;
+    public GameObject canvasGameplay_object;
     public CanvasStartScreen canvasStartScreen_script;
     public GameObject canvasStartScreen_object;
     private CanvasGameOver canvasGameOver_script;
     public GameObject canvasGameOver_object;
+    public ScoreTracker scoreTracker;
+
+    public static int height = 20;
+    public static int width = 10;
+    public static Transform[,] grid = new Transform[width, height];
+    private static int score = 0;
+    private static int highScore = 2000;
+    private static int level = 0;
+
     public enum gameState
     {
         Started,
@@ -29,40 +39,129 @@ public class GameRunner : MonoBehaviour
         Clock.enabled = false;
     }
 
-    public gameState getStatus()
+    public int GetHeight()
+    {
+        return height;
+    }
+
+    public int GetWidth()
+    {
+        return width;
+    }
+
+    public Transform GetGrid(int x, int y)
+    {
+        return grid[x, y];
+    }
+
+    public void SetGrid(int x, int y, Transform value)
+    {
+        grid[x, y] = value;
+    }
+
+    public void DestroyGrid(int x, int y)
+    {
+        if (grid[x, y] != null)
+        {
+            Destroy(grid[x, y].gameObject);
+            grid[x, y] = null;
+        }
+        
+    }
+
+    public void MoveGrid(int x, int y, Vector3 direction)
+    {
+        grid[x, y].transform.position += direction;
+    }
+
+    public gameState GetStatus()
     {
         return state;
     }
 
-    public IEnumerator StartGame()
+    public IEnumerator StartGameFromMainMenu()
     {
-        canvasStartScreen_script.fadeOut();
         yield return StartCoroutine(canvasStartScreen_script.fadeOut());
-        yield return StartCoroutine(playArea.fadeIn());
-        yield return StartCoroutine(canvasGameplay.fadeIn());
         canvasStartScreen_object.SetActive(false);
+        yield return StartCoroutine("ShowAndStartGame");
+    }
+
+    public void StartGame()
+    {
+        Debug.Log("Starting Game");
         canvasGameOver_object.SetActive(false);
         state = gameState.Started;
-        spawner.StartGame();
+        canvasGameplay_object.SetActive(true);
         Clock.enabled = true;
-        Clock.timer.Start();
+        UpdateScore();
+        Clock.StartTimer();
+        spawner.StartGame();
     }
 
     public IEnumerator EndGame()
     {
-        Clock.enabled = false;
+        canvasGameplay_object.SetActive(false);
         state = gameState.Stopped;
         canvasGameOver_object.SetActive(true);
         canvasGameOver_script = canvasGameOver_object.GetComponent<CanvasGameOver>();
         yield return StartCoroutine(canvasGameOver_script.fadeIn());
     }
 
-    public IEnumerator ConcedeGame()
+    public void ConcedeGame()
+    {
+        HidePauseMenu();
+        StartCoroutine("EndGame");
+    }
+
+    public void RestartGame()
+    {
+        HideGameOverMenu();
+        ClearGame();
+        StartGame();
+    }
+
+    public void ClearGame()
+    {
+        for (int i = 0; i < height; i++)
+        {
+            for (int j = 0; j < width; j++)
+            {
+                DestroyGrid(j, i);
+            }
+        }
+
+        score = 0;
+        Clock.ResetTimer();
+    }
+    private IEnumerator ShowAndStartGame()
+    {
+        Debug.Log("Showing Game Screen");
+        yield return StartCoroutine(playArea.fadeIn());
+        yield return StartCoroutine(canvasGameplay_script.fadeIn());
+        Debug.Log("Done");
+        Debug.Log("running startGame function");
+        StartGame();
+    }
+
+    void ShowPauseMenu()
+    {
+        pauseMenu_object.SetActive(true);
+        pauseMenu_script = pauseMenu_object.GetComponent<PauseMenu>();
+        pauseMenu_script.PauseGame();
+    }
+
+    void HidePauseMenu()
     {
         pauseMenu_script = pauseMenu_object.GetComponent<PauseMenu>();
         pauseMenu_script.UnpauseGame();
         pauseMenu_object.SetActive(false);
-        yield return StartCoroutine("EndGame");
+    }
+
+    void HideGameOverMenu()
+    {
+        canvasGameOver_script = canvasGameOver_object.GetComponent<CanvasGameOver>();
+        //canvasGameOver_script.fadeOut();
+        canvasGameOver_object.SetActive(false);
     }
 
     public void PauseGame()
@@ -70,9 +169,7 @@ public class GameRunner : MonoBehaviour
         Debug.Log("Pausing!");
         Clock.enabled = false;
         state = gameState.Paused;
-        pauseMenu_object.SetActive(true);
-        pauseMenu_script = pauseMenu_object.GetComponent<PauseMenu>();
-        pauseMenu_script.PauseGame();
+        ShowPauseMenu();
     }
 
     public void UnpauseGame()
@@ -80,9 +177,48 @@ public class GameRunner : MonoBehaviour
         Debug.Log("Unpausing!");
         Clock.enabled = true;
         state = gameState.Started;
-        pauseMenu_script = pauseMenu_object.GetComponent<PauseMenu>();
-        pauseMenu_script.UnpauseGame();
-        pauseMenu_object.SetActive(false);
+        HidePauseMenu();
+    }
+
+    private void UpdateScore()
+    {
+        if (score < highScore)
+        {
+            scoreTracker.SetText("" + score + " / " + highScore);
+        }
+        else
+        {
+            highScore = score;
+            scoreTracker.SetText("" + score);
+        }
+
+    }
+
+    public void AddToScore(int lines)
+    {
+        int increase = 0;
+        switch (lines)
+        {
+            default:
+                break;
+            case 1:
+                increase = (level + 1) * 40;
+                break;
+            case 2:
+                increase = (level + 1) * 100;
+                break;
+            case 3:
+                increase = (level + 1) * 300;
+                break;
+            case 4:
+                increase = (level + 1) * 1200;
+                break;
+        }
+
+        score += increase;
+        //Debug.Log("increasing score by " + increase);
+
+        UpdateScore();
     }
 
     // Update is called once per frame

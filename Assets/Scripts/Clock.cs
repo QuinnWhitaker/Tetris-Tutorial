@@ -19,6 +19,16 @@ public class Clock : MonoBehaviour
         
     }
 
+    public void StartTimer()
+    {
+        timer.Start();
+    }
+
+    public void ResetTimer()
+    {
+        timer.Reset();
+    }
+
     // Update is called once per frame
     void Update()
     {
