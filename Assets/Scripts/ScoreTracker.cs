@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class ScoreTracker : MonoBehaviour
 {
     private static int score = 0;
+    private static int highScore = 2000;
     private static int level = 0;
     private UnityEngine.UI.Text scoreText;
 
@@ -13,6 +14,7 @@ public class ScoreTracker : MonoBehaviour
     void Start()
     {
         scoreText = gameObject.GetComponent<UnityEngine.UI.Text>();
+        UpdateScore();
     }
 
     // Update is called once per frame
@@ -23,7 +25,15 @@ public class ScoreTracker : MonoBehaviour
 
     private void UpdateScore()
     {
-        scoreText.text = "" + score;
+        if (score < highScore)
+        {
+            scoreText.text = "" + score + " / " + highScore;
+        } else
+        {
+            highScore = score;
+            scoreText.text = "" + score;
+        }
+        
     }
 
     public void addToScore(int lines)

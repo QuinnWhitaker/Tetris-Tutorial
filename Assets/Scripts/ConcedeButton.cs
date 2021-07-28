@@ -1,16 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
-public class ResumeButton : MonoBehaviour
+public class ConcedeButton : MonoBehaviour
 {
     public GameRunner gameRunner;
-
     // Start is called before the first frame update
     void Start()
     {
-
+        
     }
 
     // Update is called once per frame
@@ -21,6 +19,6 @@ public class ResumeButton : MonoBehaviour
 
     public void ClickButton()
     {
-        gameRunner.UnpauseGame();
+        StartCoroutine(gameRunner.ConcedeGame());
     }
 }

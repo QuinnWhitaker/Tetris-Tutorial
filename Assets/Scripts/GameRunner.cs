@@ -12,6 +12,8 @@ public class GameRunner : MonoBehaviour
     public CanvasGameplay canvasGameplay;
     public CanvasStartScreen canvasStartScreen_script;
     public GameObject canvasStartScreen_object;
+    private CanvasGameOver canvasGameOver_script;
+    public GameObject canvasGameOver_object;
     public enum gameState
     {
         Started,
@@ -39,17 +41,28 @@ public class GameRunner : MonoBehaviour
         yield return StartCoroutine(playArea.fadeIn());
         yield return StartCoroutine(canvasGameplay.fadeIn());
         canvasStartScreen_object.SetActive(false);
+        canvasGameOver_object.SetActive(false);
         state = gameState.Started;
         spawner.StartGame();
         Clock.enabled = true;
         Clock.timer.Start();
     }
 
-    public void endGame()
+    public IEnumerator EndGame()
     {
-        Debug.Log("LOSS");
         Clock.enabled = false;
         state = gameState.Stopped;
+        canvasGameOver_object.SetActive(true);
+        canvasGameOver_script = canvasGameOver_object.GetComponent<CanvasGameOver>();
+        yield return StartCoroutine(canvasGameOver_script.fadeIn());
+    }
+
+    public IEnumerator ConcedeGame()
+    {
+        pauseMenu_script = pauseMenu_object.GetComponent<PauseMenu>();
+        pauseMenu_script.UnpauseGame();
+        pauseMenu_object.SetActive(false);
+        yield return StartCoroutine("EndGame");
     }
 
     public void PauseGame()

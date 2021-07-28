@@ -50,7 +50,7 @@ public class SpawnBlock : MonoBehaviour
             if (!FindObjectOfType<TetrisBlock>(false).ValidMove(obj.transform))
             {
                 Destroy(obj);
-                gameRunner.endGame();
+                StartCoroutine(gameRunner.EndGame());
             }
         }
         
