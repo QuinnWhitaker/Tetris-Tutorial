@@ -24,6 +24,9 @@ public class GameRunner : MonoBehaviour
     private static int highScore = 2000;
     private static int level = 0;
 
+    private GameObject currentBlock;
+    private GameObject currentGhost;
+
     public enum gameState
     {
         Started,
@@ -47,6 +50,26 @@ public class GameRunner : MonoBehaviour
     public int GetWidth()
     {
         return width;
+    }
+
+    public void SetCurrentBlock(GameObject block)
+    {
+        currentBlock = block;
+    }
+
+    public void ClearCurrentBlock()
+    {
+        currentBlock = null;
+    }
+
+    public void SetCurrentGhost(GameObject ghost)
+    {
+        currentGhost = ghost;
+    }
+
+    public void ClearCurrentGhost()
+    {
+        currentGhost = null;
     }
 
     public Transform GetGrid(int x, int y)
@@ -100,7 +123,9 @@ public class GameRunner : MonoBehaviour
 
     public IEnumerator EndGame()
     {
-        canvasGameplay_object.SetActive(false);
+        //canvasGameplay_object.SetActive(false);
+        Clock.StopTimer();
+        DestroyBlockAndGhost();
         state = gameState.Stopped;
         canvasGameOver_object.SetActive(true);
         canvasGameOver_script = canvasGameOver_object.GetComponent<CanvasGameOver>();
@@ -120,6 +145,21 @@ public class GameRunner : MonoBehaviour
         StartGame();
     }
 
+    private void DestroyBlockAndGhost()
+    {
+        if (currentBlock != null)
+        {
+            Debug.Log("DESTROYING BLOCK!!!");
+            Destroy(currentBlock);
+        }
+
+        if (currentGhost != null)
+        {
+            Debug.Log("DESTROYING GHOST!!!");
+            Destroy(currentGhost);
+        }
+    }
+
     public void ClearGame()
     {
         for (int i = 0; i < height; i++)
@@ -130,9 +170,12 @@ public class GameRunner : MonoBehaviour
             }
         }
 
+        DestroyBlockAndGhost();
+
         score = 0;
         Clock.ResetTimer();
     }
+
     private IEnumerator ShowAndStartGame()
     {
         Debug.Log("Showing Game Screen");

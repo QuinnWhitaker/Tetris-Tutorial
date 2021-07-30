@@ -24,6 +24,11 @@ public class Clock : MonoBehaviour
         timer.Start();
     }
 
+    public void StopTimer()
+    {
+        timer.Stop();
+    }
+
     public void ResetTimer()
     {
         timer.Reset();

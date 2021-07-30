@@ -42,6 +42,7 @@ public class SpawnBlock : MonoBehaviour
         if (gameRunner.GetStatus() == GameRunner.gameState.Started)
         {
             GameObject obj = Instantiate(previewBlock, transform.position, Quaternion.identity);
+            gameRunner.SetCurrentBlock(obj);
             TetrisBlock objScript = obj.GetComponent<TetrisBlock>();
             objScript.SetStopped(false);
             NewPreviewBlock();
@@ -50,6 +51,8 @@ public class SpawnBlock : MonoBehaviour
             if (!objScript.ValidMove(obj.transform))
             {
                 Destroy(obj);
+                gameRunner.ClearCurrentBlock();
+                gameRunner.ClearCurrentGhost();
                 StartCoroutine(gameRunner.EndGame());
             }
         }

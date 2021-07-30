@@ -72,6 +72,7 @@ public class TetrisBlock : MonoBehaviour
         if (!stopped)
         {
             ghost = Instantiate(ghostRoot, transform.position, transform.rotation);
+            gameRunner.SetCurrentGhost(ghost);
             while (ValidMove(ghost.transform))
             {
                 ghost.transform.position += new Vector3(0, -1, 0);

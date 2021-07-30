@@ -7,17 +7,27 @@ public class CanvasGameOver : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        foreach (Transform child in transform)
-        {
-            CanvasGroup childCG = child.GetComponent<CanvasGroup>();
-            childCG.alpha = 0;
-        }
+        SetChildrenNoAlpha();
+    }
+
+    private void OnEnable()
+    {
+        SetChildrenNoAlpha();
     }
 
     // Update is called once per frame
     void Update()
     {
         
+    }
+
+    void SetChildrenNoAlpha()
+    {
+        foreach (Transform child in transform)
+        {
+            CanvasGroup childCG = child.GetComponent<CanvasGroup>();
+            childCG.alpha = 0;
+        }
     }
 
     public IEnumerator fadeIn()
