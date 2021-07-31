@@ -12,12 +12,14 @@ public class TetrisBlock : MonoBehaviour
     public GameObject ghostRoot;
     public Sprite[] squareSprites;
     private GameObject ghost = null;
+    public float fadeSpeed = 0.01f;
 
     // Start is called before the first frame update
     void Start()
     {
         gameRunner = FindObjectOfType<GameRunner>();
         GenerateSprites();
+        FadeIn();
     }
 
     private void OnEnable()
@@ -244,5 +246,17 @@ public class TetrisBlock : MonoBehaviour
     public void SetStopped(bool stop)
     {
         stopped = stop;
+    }
+
+    public void FadeIn()
+    {
+        foreach (Transform child in transform)
+        {
+            GameObject obj = child.gameObject;
+            FadeObject fade = obj.GetComponent<FadeObject>();
+            fade.SetAlpha(0);
+            fade.fadeSpeed = fadeSpeed;
+            fade.FadeInObject();
+        }
     }
 }

@@ -24,6 +24,19 @@ public class FadeObject : MonoBehaviour
 
     }
 
+    public void SetAlpha(float value)
+    {
+        if(canvasObject)
+        {
+            this.GetComponent<CanvasGroup>().alpha = value;
+        }
+        else
+        {
+            Color c = this.GetComponent<SpriteRenderer>().color;
+            c.a = value;
+            this.GetComponent<SpriteRenderer>().color = c;
+        }
+    }
     void checkType()
     {
         if (this.GetComponent<CanvasGroup>() != null)

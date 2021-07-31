@@ -30,10 +30,11 @@ public class SpawnBlock : MonoBehaviour
 
     private void NewPreviewBlock()
     {
-        Debug.Log("NewPreviewBlock!");
+        //Debug.Log("NewPreviewBlock!");
         Destroy(previewBlock);
         previewBlock = Instantiate(Blocks[Random.Range(0, Blocks.Length)], previewSpawner.transform.position, Quaternion.identity);
         TetrisBlock previewScript = previewBlock.GetComponent<TetrisBlock>();
+        previewScript.FadeIn();
         previewScript.SetStopped(true);
     }
 
@@ -47,7 +48,7 @@ public class SpawnBlock : MonoBehaviour
             objScript.SetStopped(false);
             NewPreviewBlock();
 
-            Debug.Log("object: " + obj);
+            //Debug.Log("object: " + obj);
             if (!objScript.ValidMove(obj.transform))
             {
                 Destroy(obj);

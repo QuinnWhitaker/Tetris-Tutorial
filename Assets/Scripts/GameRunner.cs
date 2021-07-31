@@ -111,7 +111,7 @@ public class GameRunner : MonoBehaviour
 
     public void StartGame()
     {
-        Debug.Log("Starting Game");
+        //Debug.Log("Starting Game");
         canvasGameOver_object.SetActive(false);
         state = gameState.Started;
         canvasGameplay_object.SetActive(true);
@@ -149,13 +149,13 @@ public class GameRunner : MonoBehaviour
     {
         if (currentBlock != null)
         {
-            Debug.Log("DESTROYING BLOCK!!!");
+            //Debug.Log("DESTROYING BLOCK!!!");
             Destroy(currentBlock);
         }
 
         if (currentGhost != null)
         {
-            Debug.Log("DESTROYING GHOST!!!");
+            //Debug.Log("DESTROYING GHOST!!!");
             Destroy(currentGhost);
         }
     }
@@ -178,11 +178,11 @@ public class GameRunner : MonoBehaviour
 
     private IEnumerator ShowAndStartGame()
     {
-        Debug.Log("Showing Game Screen");
+        //Debug.Log("Showing Game Screen");
         yield return StartCoroutine(playArea.fadeIn());
         yield return StartCoroutine(canvasGameplay_script.fadeIn());
-        Debug.Log("Done");
-        Debug.Log("running startGame function");
+        //Debug.Log("Done");
+        //Debug.Log("running startGame function");
         StartGame();
     }
 
@@ -209,7 +209,7 @@ public class GameRunner : MonoBehaviour
 
     public void PauseGame()
     {
-        Debug.Log("Pausing!");
+        //Debug.Log("Pausing!");
         Clock.enabled = false;
         state = gameState.Paused;
         ShowPauseMenu();
@@ -217,7 +217,7 @@ public class GameRunner : MonoBehaviour
 
     public void UnpauseGame()
     {
-        Debug.Log("Unpausing!");
+        //Debug.Log("Unpausing!");
         Clock.enabled = true;
         state = gameState.Started;
         HidePauseMenu();
