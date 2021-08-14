@@ -15,7 +15,7 @@ public class GameRunner : MonoBehaviour
     public GameObject canvasStartScreen_object;
     private CanvasGameOver canvasGameOver_script;
     public GameObject canvasGameOver_object;
-    public ScoreTracker scoreTracker;
+    public RollingText scoreTracker;
 
     public static int height = 20;
     public static int width = 10;
@@ -225,6 +225,7 @@ public class GameRunner : MonoBehaviour
 
     private void UpdateScore()
     {
+        /*
         if (score < highScore)
         {
             scoreTracker.SetText("" + score + " / " + highScore);
@@ -234,6 +235,8 @@ public class GameRunner : MonoBehaviour
             highScore = score;
             scoreTracker.SetText("" + score);
         }
+        */
+        scoreTracker.SetText(score.ToString());
 
     }
 
