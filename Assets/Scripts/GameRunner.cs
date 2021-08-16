@@ -267,6 +267,12 @@ public class GameRunner : MonoBehaviour
         UpdateScore();
     }
 
+    public void increaseScoreBy(int addition)
+    {
+        score += addition;
+        UpdateScore();
+    }
+
     // Update is called once per frame
     void Update()
     {

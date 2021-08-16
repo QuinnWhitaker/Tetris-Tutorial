@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using System;
 
 // This class for a text mesh pro allows the individual characters to have a "rolling" effect
 // Whenever the content of the text changes, any characters that "changed" or are removed slide down below and fade out,
@@ -9,6 +10,9 @@ using TMPro;
 // When the size of the text changes and becomes re-centered, this process is also animated
 public class RollingText : MonoBehaviour
 {
+
+    private Queue<IEnumerator> coroutineQueue = new Queue<IEnumerator>();
+
     private TMP_Text m_TextComponent;
     private string currentText;
 
@@ -30,17 +34,18 @@ public class RollingText : MonoBehaviour
     private Vector4 preMargin;
 
     // The amount of time between each letter rotation
-    private float delayTime = 0.5f;
+    private float delayTime = 0.1f;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     private void Awake()
     {
         m_TextComponent = GetComponent<TMP_Text>();
+        StartCoroutine(CoroutineCoordinator());
     }
 
     void OnEnable()
@@ -84,11 +89,50 @@ public class RollingText : MonoBehaviour
         rotateIn += newTextArray[i];
     }
 
+    // Takes a float between 0 and 1 and converts it to a byte between 0 and 255
+    private byte PercentageToByte(float percentage)
+    {
+        if (percentage > 1)
+        {
+            percentage = 1;
+        }
+        else if (percentage < 0)
+        {
+            percentage = 0;
+        }
+
+        byte result = Convert.ToByte(255 * percentage);
+        return result;
+    }
+
+    // Returns a float between 0 and 1 that a midpoint float x is on a scale between min and max
+    private float GetLinearY(float min, float max, float x)
+    {
+        float percentage = System.Math.Abs(
+            (x - min) / (max - min)
+        );
+
+        return percentage;
+    }
+
+    private IEnumerator CoroutineCoordinator()
+    {
+        while (true)
+        {
+            while (coroutineQueue.Count > 0)
+            {
+                yield return StartCoroutine(coroutineQueue.Dequeue());
+            }
+            yield return null;
+        }
+    }
+
+
     // Each character in the current string that is set to rotate in or out will do so, with a slight delay
     // Characters rotating on the same index will do so at the same time
     private IEnumerator RotateSet(string newText)
     {
-
+        TMP_TextInfo textInfo = m_TextComponent.textInfo;
         m_TextComponent.ForceMeshUpdate();
 
         // Getting the width and height of the text pre-addition
@@ -99,11 +143,12 @@ public class RollingText : MonoBehaviour
         // Getting the margin pre-addition
         preMargin = m_TextComponent.margin;
 
-        //Debug.Log("preMargin: " + preMargin.x);
+        Debug.Log("preMargin: " + preMargin);
 
         // Making the addition
         m_TextComponent.text = currentText + newText;
 
+        Debug.Log("text now: " + m_TextComponent.text);
 
         m_TextComponent.ForceMeshUpdate();
 
@@ -126,25 +171,49 @@ public class RollingText : MonoBehaviour
         VertexCurve.preWrapMode = WrapMode.Loop;
         VertexCurve.postWrapMode = WrapMode.Loop;
         Vector3[] newVertexPositions;
+        Color32[] newVertexColors;
 
         bool initialized = false;
-        float totalMoved = 0f;
+        newVertexPositions = textInfo.meshInfo[0].vertices;
 
-        Debug.Log("presize y =" + preSize.y);
-        while (totalMoved < preSize.y)
+
+        // The time that the rotation started
+        float startTime = Time.time;
+
+        // The points in which each character type starts moving
+        float startPoint_currentText = newVertexPositions[textInfo.characterInfo[0].vertexIndex].y;
+        float startPoint_newText = newVertexPositions[textInfo.characterInfo[0].vertexIndex].y + preSize.y;
+
+        // The points in which each character type should stop moving
+
+        // stopPoint current is a point exactly y distance below the current Text, where y is the height of the text
+        // This is where fading out text should stop
+        float stopPoint_currentText = newVertexPositions[textInfo.characterInfo[0].vertexIndex].y - preSize.y;
+
+        // stopPoint new is where the old text used to be.
+        // This is where fading in text should stop
+        float stopPoint_newText = newVertexPositions[textInfo.characterInfo[0].vertexIndex].y;
+
+        //Debug.Log("startCurrent: " + startPoint_currentText + ", stopCurrent: " + stopPoint_currentText + ", startNew: " + startPoint_newText + ", stopNew: " + stopPoint_newText);
+
+
+
+        while (rotateOutIndices.Count > 0 || rotateInIndices.Count > 0)
         {
-            TMP_TextInfo textInfo = m_TextComponent.textInfo;
+            textInfo = m_TextComponent.textInfo;
 
             if (!initialized)
             {
+                // Initializing the rotation by adding the new string onto the current one, and shifting it to the top so that it can fall downwards
+
                 m_TextComponent.renderMode = TextRenderFlags.DontRender;
                 ResetGeometry();
 
-
                 // Get the current vertex information of each character
 
-                
                 newVertexPositions = textInfo.meshInfo[0].vertices;
+                newVertexColors = textInfo.meshInfo[0].colors32;
+
                 // Only go through the characters in the new string
                 for (int i = currentTextArray.Length; i < currentTextArray.Length + newTextArray.Length; i++)
                 {
@@ -153,78 +222,132 @@ public class RollingText : MonoBehaviour
                     // Shift the character x distance left and y distance up,
                     // Where x is the width of the string pre-addition, and y is the height of the string pre-addition
 
+                    // Set the alpha of the letter to 0
+
                     for (int j = 0; j < 4; j++)
                     {
                         newVertexPositions[vertexIndex + j].x -= preSize.x;
                         newVertexPositions[vertexIndex + j].y += preSize.y;
+
+                        Color32 newColor = newVertexColors[vertexIndex + j];
+                        newColor.a = 0;
+                        newVertexColors[vertexIndex + j] = newColor;
                     }
 
                 }
 
+                //ResetGeometry();
+
                 initialized = true;
-            } else
+            }
+            else
             {
                 newVertexPositions = textInfo.meshInfo[0].vertices;
+                newVertexColors = textInfo.meshInfo[0].colors32;
+
                 for (int i = 0; i < System.Math.Max(currentTextArray.Length, newTextArray.Length); i++)
                 {
                     int vertexIndex_currentText = textInfo.characterInfo[i].vertexIndex;
                     int vertexIndex_newText = textInfo.characterInfo[i + currentTextArray.Length].vertexIndex;
 
-                    bool isRotatingIn  = rotateInIndices.Contains(i);
+                    //bool shouldStop_currentText = newVertexPositions[vertexIndex_currentText].y <= stopPoint_currentText;
+                    //bool shouldStop_newText = newVertexPositions[vertexIndex_newText].y <= stopPoint_newText;
+
+                    byte alpha_currentText = 255;
+                    byte alpha_newText = 0;
+
+                    if (newVertexPositions[vertexIndex_currentText].y <= stopPoint_currentText + (rotateSpeed / 2))
+                    {
+                        rotateOutIndices.Remove(i);
+                        alpha_currentText = 0;
+                    }
+                    else
+                    {
+                        alpha_currentText = PercentageToByte(GetLinearY(stopPoint_currentText, startPoint_currentText, newVertexPositions[vertexIndex_currentText].y));
+                    }
+                    if (newVertexPositions[vertexIndex_newText].y <= stopPoint_newText + (rotateSpeed / 2))
+                    {
+                        rotateInIndices.Remove(i);
+                        alpha_newText = 255;
+                    }
+                    else
+                    {
+                        alpha_newText = PercentageToByte(GetLinearY(startPoint_newText, stopPoint_newText, newVertexPositions[vertexIndex_newText].y));
+                    }
+
+                    bool isRotatingIn = rotateInIndices.Contains(i);
                     bool isRotatingOut = rotateOutIndices.Contains(i);
 
-                    // Shift the character x distance left and y distance up,
-                    // Where x is the width of the string pre-addition, and y is the height of the string pre-addition
+                    // Each character drops one at a time, with a delay between them equal to delay time
+                    bool shouldStart = (Time.time >= (startTime + delayTime * i));
+
+
+                    float rotationSpeed_newText = rotateSpeed * GetLinearY(stopPoint_newText, startPoint_newText, newVertexPositions[vertexIndex_newText].y);
+                    float rotationSpeed_currentText = rotateSpeed * GetLinearY(stopPoint_currentText, startPoint_currentText, newVertexPositions[vertexIndex_currentText].y);
 
                     for (int j = 0; j < 4; j++)
                     {
-
-                        if (isRotatingIn)
+                        if (shouldStart)
                         {
-                            newVertexPositions[vertexIndex_newText + j].y -= rotateSpeed;
+                            if (isRotatingIn)
+                            {
+                                newVertexPositions[vertexIndex_newText + j].y -= rotationSpeed_newText;
+                                newVertexColors[vertexIndex_newText + j].a = alpha_newText;
+                            }
+                            if (isRotatingOut)
+                            {
+                                newVertexPositions[vertexIndex_currentText + j].y -= rotationSpeed_currentText;
+                                newVertexColors[vertexIndex_currentText + j].a = alpha_currentText;
+                            }
+                            if (alpha_newText == 255)
+                            {
+                                newVertexColors[vertexIndex_currentText + j].a = 255;
+                            }
+                            if (alpha_currentText == 0)
+                            {
+                                newVertexColors[vertexIndex_currentText + j].a = 0;
+                            }
                         }
-                        if (isRotatingOut)
-                        {
-                            newVertexPositions[vertexIndex_currentText + j].y -= rotateSpeed;
-                        }
-
-                        totalMoved += rotateSpeed;
-
                     }
-
                 }
             }
+
+            /*
+            if (m_TextComponent.margin.x > preMargin.x)
+            {
+                Vector4 tempMargin = m_TextComponent.margin;
+                tempMargin.x = tempMargin.x - 0.03f;
+                m_TextComponent.margin = tempMargin;
+            }
+            */
 
             // Apply the change
 
             for (int i = 0; i < textInfo.meshInfo.Length; i++)
             {
                 textInfo.meshInfo[i].mesh.vertices = textInfo.meshInfo[i].vertices;
+                textInfo.meshInfo[i].mesh.colors32 = newVertexColors;
                 m_TextComponent.UpdateGeometry(textInfo.meshInfo[i].mesh, i);
             }
 
             yield return new WaitForSeconds(0.01f);
         }
 
-        //m_TextComponent.text = newText;
-        //m_TextComponent.margin = preMargin;
+        Debug.Log("<color=red><b>DONE</b></color>");
+        m_TextComponent.text = newText;
+        //Debug.Log("m_TextComponent.text: " + m_TextComponent.text);
+        m_TextComponent.margin = preMargin;
+        //Debug.Log("m_TextComponent.margin: " + m_TextComponent.margin);
+        ResetGeometry();
 
-    }
-
-    // Adds the new string to the old one, and if the textmeshpro is centered, re-adjusts the offset that this causes
-    // Then takes the newly added string, and instantly moves each character from it above the one it will be replacing
-    // If it is not rotating in, it will be set to invisible
-    private IEnumerator InitRotation(string newText)
-    {
-        yield return null;
     }
 
     public void SetText(string newText)
     {
-        StartCoroutine(SetTextIEnumerator(newText));
+        coroutineQueue.Enqueue(SetTextEnumerator(newText));
     }
 
-    public IEnumerator SetTextIEnumerator(string newText)
+    public IEnumerator SetTextEnumerator(string newText)
     {
         currentText = m_TextComponent.text;
 
@@ -232,8 +355,6 @@ public class RollingText : MonoBehaviour
         {
             currentTextArray = currentText.ToCharArray();
             newTextArray = newText.ToCharArray();
-
-            yield return StartCoroutine(InitRotation(newText));
 
             // Compare the two strings. Determine which characters need to be rotated out and rotated in
 
@@ -252,17 +373,21 @@ public class RollingText : MonoBehaviour
 
                 if (inCurrent && inNew)
                 {
+                    /*
                     if (!currentTextArray[i].Equals(newTextArray[i]))
                     {
                         AddToOut(i);
                         AddToIn(i);
                     }
+                    */
+                    AddToOut(i);
+                    AddToIn(i);
 
-                } 
-                else if (inCurrent && !inNew) 
+                }
+                else if (inCurrent && !inNew)
                 {
                     AddToOut(i);
-                } 
+                }
                 else if (!inCurrent && inNew)
                 {
                     AddToIn(i);
@@ -271,7 +396,7 @@ public class RollingText : MonoBehaviour
 
             // Each character set to rotate out will fade out and move downwards
 
-            StartCoroutine(RotateSet(newText));
+            yield return StartCoroutine(RotateSet(newText));
         }
     }
 
